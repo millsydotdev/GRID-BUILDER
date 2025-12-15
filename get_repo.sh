@@ -30,7 +30,7 @@ mkdir -p vscode
 cd vscode || { echo "'vscode' dir not found"; exit 1; }
 
 git init -q
-git remote add origin https://github.com/${GH_REPO_PATH}.git
+git remote add origin https://x-access-token:${AUTH_TOKEN}@github.com/GRID-NETWORK-REPO/GRID-IDE.git
 
 # Allow callers to specify a particular commit to checkout via the
 # environment variable GRID_COMMIT.  We still default to the tip of the
