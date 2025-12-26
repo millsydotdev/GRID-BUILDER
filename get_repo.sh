@@ -48,16 +48,16 @@ else
 fi
 
 MS_TAG=$( jq -r '.version' "package.json" )
-MS_COMMIT=$GRID_BRANCH # Void - MS_COMMIT doesn't seem to do much
-GRID_VERSION=$( jq -r '.gridVersion' "product.json" ) # Void added this
+MS_COMMIT=$GRID_BRANCH # GRID - MS_COMMIT doesn't seem to do much
+GRID_VERSION=$( jq -r '.gridVersion' "product.json" ) # GRID - grid version from product.json
 
-if [[ -n "${GRID_RELEASE}" ]]; then # Void added GRID_RELEASE as optional to bump manually
+if [[ -n "${GRID_RELEASE}" ]]; then # GRID - GRID_RELEASE as optional to bump manually
   RELEASE_VERSION="${MS_TAG}${GRID_RELEASE}"
 else
   GRID_RELEASE=$( jq -r '.gridRelease' "product.json" )
   RELEASE_VERSION="${MS_TAG}${GRID_RELEASE}"
 fi
-# Void - RELEASE_VERSION is later used as version (1.0.3+RELEASE_VERSION), so it MUST be a number or it will throw a semver error in void
+# GRID - RELEASE_VERSION is later used as version (1.0.3+RELEASE_VERSION), so it MUST be a number or it will throw a semver error
 
 
 echo "RELEASE_VERSION=\"${RELEASE_VERSION}\""
@@ -71,7 +71,7 @@ if [[ "${GITHUB_ENV}" ]]; then
   echo "MS_TAG=${MS_TAG}" >> "${GITHUB_ENV}"
   echo "MS_COMMIT=${MS_COMMIT}" >> "${GITHUB_ENV}"
   echo "RELEASE_VERSION=${RELEASE_VERSION}" >> "${GITHUB_ENV}"
-  echo "GRID_VERSION=${GRID_VERSION}" >> "${GITHUB_ENV}" # Void added this
+  echo "GRID_VERSION=${GRID_VERSION}" >> "${GITHUB_ENV}" # GRID added this
 fi
 
 

@@ -6,14 +6,14 @@ set -e
 # include common functions
 . ./utils.sh
 
-# Void - disable icon copying, we already handled icons
+# GRID - disable icon copying, we already handled icons
 # if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
 #   cp -rp src/insider/* vscode/
 # else
 #   cp -rp src/stable/* vscode/
 # fi
 
-# Void - keep our license...
+# GRID - keep our license...
 # cp -f LICENSE vscode/LICENSE.txt
 
 cd vscode || { echo "'vscode' dir not found"; exit 1; }
@@ -34,7 +34,7 @@ echo "ORG_NAME=\"${ORG_NAME}\""
 
 echo "GRID-SPECIFIC: Skipping patch application - GRID is already customized"
 # Patches disabled for GRID builds - uncomment below if needed for VSCodium-style builds
-#echo "Applying patches at ../patches/*.patch..." # Void comment
+#echo "Applying patches at ../patches/*.patch..." # GRID comment
 #for file in ../patches/*.patch; do
 #  if [[ -f "${file}" ]]; then
 #    apply_patch "${file}"
@@ -42,7 +42,7 @@ echo "GRID-SPECIFIC: Skipping patch application - GRID is already customized"
 #done
 #
 #if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
-#  echo "Applying insider patches..." # Void comment
+#  echo "Applying insider patches..." # GRID comment
 #  for file in ../patches/insider/*.patch; do
 #    if [[ -f "${file}" ]]; then
 #      apply_patch "${file}"
@@ -51,7 +51,7 @@ echo "GRID-SPECIFIC: Skipping patch application - GRID is already customized"
 #fi
 #
 #if [[ -d "../patches/${OS_NAME}/" ]]; then
-#  echo "Applying OS patches (${OS_NAME})..." # Void comment
+#  echo "Applying OS patches (${OS_NAME})..." # GRID comment
 #  for file in "../patches/${OS_NAME}/"*.patch; do
 #    if [[ -f "${file}" ]]; then
 #      apply_patch "${file}"
@@ -59,7 +59,7 @@ echo "GRID-SPECIFIC: Skipping patch application - GRID is already customized"
 #  done
 #fi
 #
-#echo "Applying user patches..." # Void comment
+#echo "Applying user patches..." # GRID comment
 #for file in ../patches/user/*.patch; do
 #  if [[ -f "${file}" ]]; then
 #    apply_patch "${file}"
@@ -186,7 +186,7 @@ else
   setpath "product" "win32NameVersion" "GRID-IDE"
   setpath "product" "win32RegValueName" "GRID-IDE"
   setpath "product" "win32ShellNameShort" "GRID-IDE"
-  # Void - already set in product
+  # GRID - already set in product
   # setpath "product" "win32AppId" "{{88DA3577-054F-4CA1-8122-7D820494CFFB}"
   # setpath "product" "win32x64AppId" "{{9D394D01-1728-45A7-B997-A6C82C5452C3}"
   # setpath "product" "win32arm64AppId" "{{0668DD58-2BDE-4101-8CDA-40252DF8875D}"
@@ -223,7 +223,7 @@ if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
   setpath "resources/server/manifest" "name" "GRID-IDE - Insiders"
   setpath "resources/server/manifest" "short_name" "GRID-IDE - Insiders"
 else
-  # Void already has this
+  # GRID already has this
   setpath "resources/server/manifest" "name" "GRID-IDE"
   setpath "resources/server/manifest" "short_name" "GRID-IDE"
 fi

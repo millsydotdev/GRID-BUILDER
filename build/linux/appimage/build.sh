@@ -22,7 +22,7 @@ if [[ "${VSCODE_ARCH}" == "x64" ]]; then
   ./pkg2appimage.AppImage --appimage-extract && mv ./squashfs-root ./pkg2appimage.AppDir
 
   # add update's url
-  # Void - this line is important - ask GPT about it
+  # GRID - this line is important - ask GPT about it
   sed -i 's/generate_type2_appimage/generate_type2_appimage -u "gh-releases-zsync|voideditor|binaries|latest|*.AppImage.zsync"/' pkg2appimage.AppDir/AppRun
 
   # remove check so build in docker can succeed
@@ -33,7 +33,7 @@ if [[ "${VSCODE_ARCH}" == "x64" ]]; then
     sed -i 's|@@APPNAME@@|void-insiders|g' recipe.yml
     sed -i 's|@@ICON@@|void-insiders|g' recipe.yml
   else
-    # Void branding instead of default codium
+    # GRID branding instead of default codium
     sed -i 's|@@NAME@@|Void|g' recipe.yml
     sed -i 's|@@APPNAME@@|void|g' recipe.yml
     sed -i 's|@@ICON@@|void|g' recipe.yml
@@ -45,7 +45,7 @@ if [[ "${VSCODE_ARCH}" == "x64" ]]; then
 
   rm -f pkg2appimage-*.AppImage
   rm -rf pkg2appimage.AppDir
-  rm -rf Void* # Void had this commented out at one point
+  rm -rf Void* # GRID had this commented out at one point
 fi
 
 cd "${CALLER_DIR}"
