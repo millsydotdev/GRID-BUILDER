@@ -32,9 +32,9 @@ on:
 
 env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  APP_NAME: GRID-IDE
+  APP_NAME: GRID
   ASSETS_REPOSITORY: ${{ github.repository_owner }}/binaries
-  BINARY_NAME: grid-ide
+  BINARY_NAME: grid
   DISABLE_UPDATE: 'yes'
   GH_REPO_PATH: ${{ github.repository_owner }}/binaries
   ORG_NAME: ${{ github.repository_owner }}
