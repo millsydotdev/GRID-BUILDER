@@ -71,7 +71,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version: '22.15.1'
+          node-version: ${{ steps.node-version.outputs.NODE_VERSION }}
 
       - name: Setup Python 3
         uses: actions/setup-python@v6
@@ -86,6 +86,10 @@ jobs:
           grid_release: ${{ github.event.inputs.grid_release }} # GRID added this
         run: . get_repo.sh
 
+
+      - name: Get Node version from GRID .nvmrc
+        id: node-version
+        run: echo "NODE_VERSION=$(cat vscode/.nvmrc)" >> $GITHUB_OUTPUT
       - name: Check PR or cron
         env:
           GENERATE_ASSETS: ${{ github.event.inputs.generate_assets }}
