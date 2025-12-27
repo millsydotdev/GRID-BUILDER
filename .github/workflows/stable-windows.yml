@@ -66,6 +66,11 @@ jobs:
           AUTH_TOKEN: ${{ secrets.STRONGER_GITHUB_TOKEN }}
         run: ./get_repo.sh
 
+
+      - name: Get Node version from GRID .nvmrc
+        id: node-version
+        run: echo "NODE_VERSION=$(cat vscode/.nvmrc)" >> $Env:GITHUB_OUTPUT
+        if: env.SHOULD_BUILD == 'yes'
       - name: Check PR or cron
         env:
           GENERATE_ASSETS: ${{ github.event.inputs.generate_assets }}
@@ -110,7 +115,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version: '22.15.1'
+          node-version: ${{ steps.node-version.outputs.NODE_VERSION }}
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Setup Python 3
@@ -130,6 +135,10 @@ jobs:
         run: ./get_repo.sh
         if: env.SHOULD_BUILD == 'yes'
 
+
+      - name: Get Node version from GRID .nvmrc
+        id: node-version
+        run: echo "NODE_VERSION=$(cat vscode/.nvmrc)" >> $Env:GITHUB_OUTPUT
       - name: Build
         env:
           SHOULD_BUILD_REH: 'no'
@@ -194,7 +203,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v6
         with:
-          node-version: '22.15.1'
+          node-version: ${{ steps.node-version.outputs.NODE_VERSION }}
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Setup Python 3
