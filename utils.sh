@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
-APP_NAME="${APP_NAME:-GRID-IDE}"
+APP_NAME="${APP_NAME:-Void}"
 APP_NAME_LC="$( echo "${APP_NAME}" | awk '{print tolower($0)}' )"
-BINARY_NAME="${BINARY_NAME:-grid-ide}"
-GH_REPO_PATH="${GH_REPO_PATH:-GRID-Editor/GRID}"
-ORG_NAME="${ORG_NAME:-GRID-Editor}"
+BINARY_NAME="${BINARY_NAME:-void}"
+GH_REPO_PATH="${GH_REPO_PATH:-voideditor/void}"
+ORG_NAME="${ORG_NAME:-voideditor}"
 
 echo "---------- utils.sh -----------"
 echo "APP_NAME=\"${APP_NAME}\""

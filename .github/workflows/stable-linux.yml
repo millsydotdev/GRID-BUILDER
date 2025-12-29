@@ -12,10 +12,10 @@ on:
       checkout_pr:
         type: string
         description: Checkout PR
-      grid_commit: # Void added this
+      void_commit: # Void added this
         type: string
         description: Checkout specific Void commit
-      grid_release: # Void added this
+      void_release: # Void added this
         type: string
         description: Custom release number
   repository_dispatch:
@@ -32,9 +32,9 @@ on:
 
 env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  APP_NAME: GRID
+  APP_NAME: Void
   ASSETS_REPOSITORY: ${{ github.repository_owner }}/binaries
-  BINARY_NAME: grid
+  BINARY_NAME: void
   DISABLE_UPDATE: 'yes'
   GH_REPO_PATH: ${{ github.repository_owner }}/binaries
   ORG_NAME: ${{ github.repository_owner }}
@@ -53,7 +53,7 @@ jobs:
       SHOULD_DEPLOY: ${{ env.SHOULD_DEPLOY }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           ref: ${{ env.GITHUB_BRANCH }}
 
@@ -61,22 +61,12 @@ jobs:
         env:
           PULL_REQUEST_ID: ${{ github.event.inputs.checkout_pr }}
         run: ./get_pr.sh
+
       - name: Clone VSCode repo
-        env:
-          grid_commit: ${{ github.event.inputs.grid_commit }}
-          grid_release: ${{ github.event.inputs.grid_release }}
-          AUTH_TOKEN: ${{ secrets.STRONGER_GITHUB_TOKEN }}
+        env: # Void added this
+          VOID_COMMIT: ${{ github.event.inputs.void_commit }} # Void added this
+          VOID_RELEASE: ${{ github.event.inputs.void_release }} # Void added this
         run: ./get_repo.sh
-
-
-      - name: Get Node version from GRID .nvmrc
-        id: node-version
-        run: echo "NODE_VERSION=$(cat vscode/.nvmrc)" >> $GITHUB_OUTPUT
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ steps.node-version.outputs.NODE_VERSION }}
 
       - name: Check PR or cron
         env:
@@ -103,7 +93,7 @@ jobs:
       BUILD_SOURCEVERSION: ${{ env.BUILD_SOURCEVERSION }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           ref: ${{ env.GITHUB_BRANCH }}
         if: env.SHOULD_BUILD == 'yes'
@@ -127,8 +117,14 @@ jobs:
           sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 \
             --recv-keys 2C277A0A352154E5 1E9377A2BA9EF27F
 
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.18.2'
+        if: env.SHOULD_BUILD == 'yes'
+
       - name: Setup Python 3
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
         if: env.SHOULD_BUILD == 'yes'
@@ -136,23 +132,13 @@ jobs:
       - name: Install libkrb5-dev
         run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.SHOULD_BUILD == 'yes'
+
       - name: Clone VSCode repo
-        env:
-          grid_commit: ${{ github.event.inputs.grid_commit }}
-          grid_release: ${{ github.event.inputs.grid_release }}
-          AUTH_TOKEN: ${{ secrets.STRONGER_GITHUB_TOKEN }}
+        env: # Void added this
+          VOID_COMMIT: ${{ github.event.inputs.void_commit }} # Void added this
+          VOID_RELEASE: ${{ github.event.inputs.void_release }} # Void added this
         run: ./get_repo.sh
         if: env.SHOULD_BUILD == 'yes'
-
-
-      - name: Get Node version from GRID .nvmrc
-        id: node-version
-        run: echo "NODE_VERSION=$(cat vscode/.nvmrc)" >> $GITHUB_OUTPUT
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ steps.node-version.outputs.NODE_VERSION }}
 
       - name: Build
         env:
@@ -170,7 +156,7 @@ jobs:
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Upload vscode artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: vscode
           path: ./vscode.tar.gz
@@ -227,7 +213,7 @@ jobs:
       SHOULD_DEPLOY: ${{ env.SHOULD_DEPLOY }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           ref: ${{ env.GITHUB_BRANCH }}
         if: env.DISABLED != 'yes' && env.SHOULD_BUILD == 'yes'
@@ -258,23 +244,10 @@ jobs:
         if: env.DISABLED != 'yes' && env.SHOULD_BUILD == 'yes'
 
       - name: Download vscode artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v4
         with:
           name: vscode
         if: env.DISABLED != 'yes' && env.SHOULD_BUILD == 'yes'
-
-
-      - name: Extract vscode artifact
-        run: tar -xzf vscode.tar.gz
-
-      - name: Get Node version from GRID .nvmrc
-        id: node-version
-        run: echo "NODE_VERSION=$(cat vscode/.nvmrc)" >> $GITHUB_OUTPUT
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ steps.node-version.outputs.NODE_VERSION }}
 
       - name: Build
         env:
@@ -306,7 +279,7 @@ jobs:
         if: env.DISABLED != 'yes' && env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
 
       - name: Upload assets
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: bin-${{ matrix.vscode_arch }}
           path: assets/
@@ -355,7 +328,7 @@ jobs:
     if: needs.check.outputs.SHOULD_BUILD == 'yes' || github.event.inputs.generate_assets == 'true'
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           ref: ${{ env.GITHUB_BRANCH }}
         if: env.DISABLED != 'yes'
@@ -373,8 +346,14 @@ jobs:
           platform: x64
         if: env.DISABLED != 'yes'
 
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.18.2'
+        if: env.DISABLED != 'yes'
+
       - name: Setup Python 3
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
         if: env.DISABLED != 'yes'
@@ -395,23 +374,10 @@ jobs:
         if: env.DISABLED != 'yes'
 
       - name: Download vscode artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v4
         with:
           name: vscode
         if: env.DISABLED != 'yes' && (env.SHOULD_BUILD_REH != 'no' || env.SHOULD_BUILD_REH_WEB != 'no' || github.event.inputs.generate_assets == 'true')
-
-
-      - name: Extract vscode artifact
-        run: tar -xzf vscode.tar.gz
-
-      - name: Get Node version from GRID .nvmrc
-        id: node-version
-        run: echo "NODE_VERSION=$(cat vscode/.nvmrc)" >> $GITHUB_OUTPUT
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ steps.node-version.outputs.NODE_VERSION }}
 
       - name: Build
         env:
@@ -428,7 +394,7 @@ jobs:
         if: env.DISABLED != 'yes' && env.SHOULD_DEPLOY == 'yes' && (env.SHOULD_BUILD_REH != 'no' || env.SHOULD_BUILD_REH_WEB != 'no')
 
       - name: Upload assets
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: reh-linux-${{ matrix.vscode_arch }}
           path: assets/
@@ -463,7 +429,7 @@ jobs:
     if: needs.check.outputs.SHOULD_BUILD == 'yes' || github.event.inputs.generate_assets == 'true'
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
         with:
           ref: ${{ env.GITHUB_BRANCH }}
 
@@ -493,23 +459,10 @@ jobs:
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Download vscode artifact
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@v4
         with:
           name: vscode
         if: env.DISABLED != 'yes' && (env.SHOULD_BUILD_REH != 'no' || env.SHOULD_BUILD_REH_WEB != 'no' || github.event.inputs.generate_assets == 'true')
-
-
-      - name: Extract vscode artifact
-        run: tar -xzf vscode.tar.gz
-
-      - name: Get Node version from GRID .nvmrc
-        id: node-version
-        run: echo "NODE_VERSION=$(cat vscode/.nvmrc)" >> $GITHUB_OUTPUT
-
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v6
-        with:
-          node-version: ${{ steps.node-version.outputs.NODE_VERSION }}
 
       - name: Build
         env:
@@ -526,7 +479,7 @@ jobs:
         if: env.DISABLED != 'yes' && env.SHOULD_DEPLOY == 'yes' && (env.SHOULD_BUILD_REH != 'no' || env.SHOULD_BUILD_REH_WEB != 'no')
 
       - name: Upload assets
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v4
         with:
           name: reh-alpine-${{ matrix.vscode_arch }}
           path: assets/
@@ -577,7 +530,7 @@ jobs:
   #   if: needs.check.outputs.SHOULD_DEPLOY == 'yes' && needs.check.outputs.SHOULD_BUILD_SNAP != 'no' && vars.DISABLE_STABLE_SNAP != 'yes'
 
   #   steps:
-  #     - uses: actions/checkout@v6
+  #     - uses: actions/checkout@v4
   #       with:
   #         ref: ${{ env.GITHUB_BRANCH }}
 
