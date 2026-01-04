@@ -84,6 +84,9 @@ jobs:
           python-version: "3.11"
         if: env.VSCODE_ARCH == 'x64'
 
+      - name: Install libvips (required for sharp)
+        run: brew install vips
+
       - name: Clone VSCode repo
         env: # Void added this
           VOID_COMMIT: ${{ github.event.inputs.void_commit }} # Void added this
