@@ -2,9 +2,9 @@
 
 APP_NAME="${APP_NAME:-GRID}"
 APP_NAME_LC="$( echo "${APP_NAME}" | awk '{print tolower($0)}' )"
-BINARY_NAME="${BINARY_NAME:-grid}"
+BINARY_NAME="${BINARY_NAME:-GRID}"
 GH_REPO_PATH="${GH_REPO_PATH:-millsydotdev/GRID-BUILDER}"
-ORG_NAME="${ORG_NAME:-millsydotdev}"
+ORG_NAME="${ORG_NAME:-GRID-Editor}"
 
 echo "---------- utils.sh -----------"
 echo "APP_NAME=\"${APP_NAME}\""

@@ -18,7 +18,7 @@ const ARCH_MAP = {
     'ia32': 'ia32'
 };
 
-const BINARY_NAME = platform === 'win32' ? 'grid.exe' : 'grid';
+const BINARY_NAME = platform === 'win32' ? 'GRID.exe' : 'GRID';
 
 async function downloadBinary() {
     const currentPlatform = PLATFORM_MAP[platform];
