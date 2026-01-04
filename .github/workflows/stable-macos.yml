@@ -31,18 +31,21 @@ on:
       - "**/*.md"
 
 env:
-  APP_NAME: Void
+  APP_NAME: GRID
   # ASSETS_REPOSITORY is where all the downloads are.
   # VSCodium has this be the current repo, voideditor/void-builder:
   # ASSETS_REPOSITORY: ${{ github.repository }}
 
   ASSETS_REPOSITORY: ${{ github.repository_owner }}/binaries
-  BINARY_NAME: void
+  BINARY_NAME: GRID
   GH_REPO_PATH: ${{ github.repository_owner }}/binaries
-  ORG_NAME: ${{ github.repository_owner }}
+  ORG_NAME: GRID-Editor
   OS_NAME: osx
   VERSIONS_REPOSITORY: ${{ github.repository_owner }}/versions
   VSCODE_QUALITY: stable
+
+permissions:
+  contents: write
 
 jobs:
   build:

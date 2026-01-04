@@ -32,15 +32,18 @@ on:
 
 env:
   ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
-  APP_NAME: Void
+  APP_NAME: GRID
   ASSETS_REPOSITORY: ${{ github.repository_owner }}/binaries
-  BINARY_NAME: void
+  BINARY_NAME: GRID
   DISABLE_UPDATE: "yes"
   GH_REPO_PATH: ${{ github.repository_owner }}/binaries
-  ORG_NAME: ${{ github.repository_owner }}
+  ORG_NAME: GRID-Editor
   OS_NAME: linux
   VERSIONS_REPOSITORY: ${{ github.repository_owner }}/versions
   VSCODE_QUALITY: stable
+
+permissions:
+  contents: write
 
 jobs:
   check:
