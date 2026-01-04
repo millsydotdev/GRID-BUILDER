@@ -134,8 +134,8 @@ jobs:
           python-version: "3.11"
         if: env.SHOULD_BUILD == 'yes'
 
-      - name: Install libkrb5-dev
-        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
+      - name: Install libkrb5-dev and libvips-dev
+        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev libvips-dev
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Clone VSCode repo
@@ -363,8 +363,8 @@ jobs:
           python-version: "3.11"
         if: env.DISABLED != 'yes'
 
-      - name: Install libkrb5-dev
-        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
+      - name: Install libkrb5-dev and libvips-dev
+        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev libvips-dev
         if: env.DISABLED != 'yes'
 
       - name: Install GH
@@ -459,8 +459,8 @@ jobs:
           CHECK_ONLY_REH: "yes"
         run: ./check_tags.sh
 
-      - name: Install libkrb5-dev
-        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
+      - name: Install libkrb5-dev and libvips-dev
+        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev libvips-dev
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Download vscode artifact
