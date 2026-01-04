@@ -1,6 +1,8 @@
 name: insiders-windows
 
 on:
+  schedule:
+    - cron: "0 2 * * *" # Run daily at 2 AM UTC
   workflow_dispatch:
     inputs:
       force_version:
@@ -21,24 +23,27 @@ on:
   repository_dispatch:
     types: [insiders]
   push:
-    branches: [ master ]
+    branches: [master]
     paths-ignore:
-    - '**/*.md'
-    - 'upstream/*.json'
+      - "**/*.md"
+      - "upstream/*.json"
   pull_request:
-    branches: [ master ]
+    branches: [master]
     paths-ignore:
-    - '**/*.md'
+      - "**/*.md"
 
 env:
-  APP_NAME: Void
+  APP_NAME: GRID
   ASSETS_REPOSITORY: ${{ github.repository_owner }}/binaries
-  BINARY_NAME: void
+  BINARY_NAME: GRID
   GH_REPO_PATH: ${{ github.repository_owner }}/binaries
-  ORG_NAME: ${{ github.repository_owner }}
+  ORG_NAME: GRID-Editor
   OS_NAME: windows
   VERSIONS_REPOSITORY: ${{ github.repository_owner }}/versions
   VSCODE_QUALITY: insider
+
+permissions:
+  contents: write
 
 jobs:
   check:
@@ -74,7 +79,7 @@ jobs:
       - name: Check existing VSCodium tags/releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CHECK_ALL: 'yes'
+          CHECK_ALL: "yes"
         run: ./check_tags.sh
 
   compile:
@@ -86,7 +91,7 @@ jobs:
       MS_TAG: ${{ needs.check.outputs.MS_TAG }}
       RELEASE_VERSION: ${{ needs.check.outputs.RELEASE_VERSION }}
       SHOULD_BUILD: ${{ (needs.check.outputs.SHOULD_BUILD == 'yes' || github.event.inputs.generate_assets == 'true') && 'yes' || 'no' }}
-      VSCODE_ARCH: 'x64'
+      VSCODE_ARCH: "x64"
     outputs:
       BUILD_SOURCEVERSION: ${{ env.BUILD_SOURCEVERSION }}
 
@@ -110,13 +115,13 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20.18.2'
+          node-version: "20.18.2"
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Setup Python 3
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Install libkrb5-dev
@@ -132,8 +137,8 @@ jobs:
 
       - name: Build
         env:
-          SHOULD_BUILD_REH: 'no'
-          SHOULD_BUILD_REH_WEB: 'no'
+          SHOULD_BUILD_REH: "no"
+          SHOULD_BUILD_REH_WEB: "no"
         run: ./build.sh
         if: env.SHOULD_BUILD == 'yes'
 
@@ -194,13 +199,13 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '20.18.2'
+          node-version: "20.18.2"
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Setup Python 3
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Check existing VSCodium tags/releases
