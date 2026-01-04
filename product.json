@@ -535,5 +535,6 @@
     "gruntfuggly.todo-tree": {
       "default": false
     }
-  }
+  },
+  "gridVersion": "0.9.1"
 }

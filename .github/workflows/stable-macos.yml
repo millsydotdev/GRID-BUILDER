@@ -115,6 +115,7 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.STRONGER_GITHUB_TOKEN }} # Void bumped this to stronger
+          GRID_API_SECRET: ${{ secrets.GRID_API_SECRET }}
         run: ./release.sh
         if: env.SHOULD_BUILD == 'yes' && env.SHOULD_DEPLOY == 'yes'
 
