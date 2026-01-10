@@ -34,6 +34,9 @@ echo "DEBUG: git init running..."
 git init -q
 git config --local --unset-all http.https://github.com/.extraheader || true
 git config --local --unset-all http.extraheader || true
+unset GIT_ASKPASS
+unset SSH_ASKPASS
+git config --list --show-origin
 
 echo "DEBUG: removing origin if exists..."
 git remote remove origin || true
