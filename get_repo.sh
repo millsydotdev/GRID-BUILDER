@@ -30,10 +30,13 @@ rm -rf vscode
 mkdir -p vscode
 cd vscode || { echo "'vscode' dir not found"; exit 1; }
 
+echo "DEBUG: git init running..."
 git init -q
 git config --local --unset-all http.https://github.com/.extraheader || true
 git config --local --unset-all http.extraheader || true
 
+echo "DEBUG: removing origin if exists..."
+git remote remove origin || true
 git remote add origin https://github.com/millsydotdev/GRID.git
 
 # Allow callers to specify a particular commit to checkout via the
