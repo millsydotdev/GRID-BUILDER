@@ -26,6 +26,7 @@ fi
 GRID_BRANCH="main"
 echo "Cloning GRID ${GRID_BRANCH}..."
 
+rm -rf vscode
 mkdir -p vscode
 cd vscode || { echo "'vscode' dir not found"; exit 1; }
 
