@@ -27,34 +27,22 @@ GRID_BRANCH="main"
 echo "Cloning GRID ${GRID_BRANCH}..."
 
 rm -rf vscode
-mkdir -p vscode
-cd vscode || { echo "'vscode' dir not found"; exit 1; }
+echo "DEBUG: Cleaning vscode dir"
+rm -rf vscode
 
-echo "DEBUG: git init running..."
-git init -q
-git config --local --unset-all http.https://github.com/.extraheader || true
-git config --local --unset-all http.extraheader || true
-unset GIT_ASKPASS
-unset SSH_ASKPASS
-git config --list --show-origin
-
-echo "DEBUG: removing origin if exists..."
-git remote remove origin || true
-git remote add origin https://github.com/millsydotdev/GRID.git
-
-# Allow callers to specify a particular commit to checkout via the
-# environment variable GRID_COMMIT.  We still default to the tip of the
-# ${GRID_BRANCH} branch when the variable is not provided.  Keeping
-# GRID_BRANCH as "main" ensures the rest of the script (and downstream
-# consumers) behave exactly as before.
+# Clone the repository
 if [[ -n "${GRID_COMMIT}" ]]; then
-  echo "Using explicit commit ${GRID_COMMIT}"
-  # Fetch just that commit to keep the clone shallow.
-  git -c http.extraheader="" -c credential.helper="" fetch --depth 1 origin "${GRID_COMMIT}"
+  echo "Cloning specific commit ${GRID_COMMIT}..."
+  mkdir -p vscode
+  cd vscode || exit 1
+  git init -q
+  git remote add origin https://github.com/millsydotdev/GRID.git
+  git fetch --depth 1 origin "${GRID_COMMIT}"
   git checkout "${GRID_COMMIT}"
 else
-  git -c http.extraheader="" -c credential.helper="" fetch --depth 1 origin "${GRID_BRANCH}"
-  git checkout FETCH_HEAD
+  echo "Cloning branch ${GRID_BRANCH}..."
+  git clone --depth 1 --branch "${GRID_BRANCH}" https://github.com/millsydotdev/GRID.git vscode
+  cd vscode || { echo "'vscode' dir not found"; exit 1; }
 fi
 
 MS_TAG=$( jq -r '.version' "package.json" )
