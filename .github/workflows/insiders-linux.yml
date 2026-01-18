@@ -169,6 +169,9 @@ jobs:
         if: env.SHOULD_BUILD == 'yes'
 
   build:
+    # NOTE: Using VSCodium's Linux build agent Docker images as they provide
+    # pre-configured build environments for all architectures. These are
+    # external dependencies maintained by the VSCodium project.
     needs:
       - check
       - compile
