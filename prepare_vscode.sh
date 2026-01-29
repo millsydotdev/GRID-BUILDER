@@ -41,22 +41,52 @@ else
   git config user.email "builder@grideditor.com"
   git config user.name "GRID Builder"
 
-  # Apply helper/settings.patch first if it exists
   # Note: settings.patch removed as it was outdated and settings.json is already customized for GRID
 
-  # Apply all other patches
+  # Apply all patches EXCEPT brand.patch (which is too fragile against upstream changes)
   for patch_file in ../patches/*.patch; do
-      if [[ "$(basename "$patch_file")" == "brand.patch" ]]; then
-          echo "Applying brand.patch..."
-          # Replace !!APP_NAME!! placeholders if needed, but brand.patch seems to use them
-          # logic to replace placeholders is likely needed either before or after
+      patch_name="$(basename "$patch_file")"
+
+      # Skip brand.patch - we'll do branding via sed instead (more robust)
+      if [[ "$patch_name" == "brand.patch" ]]; then
+          echo "Skipping $patch_name - using sed-based branding instead..."
+          continue
       fi
 
-      echo "Applying $(basename "$patch_file")..."
-      git apply "$patch_file" || echo "Warning: Failed to apply $patch_file"
-      git add .
-      git commit -m "Apply $(basename "$patch_file")"
+      echo "Applying $patch_name..."
+      if git apply "$patch_file"; then
+          git add .
+          git commit -m "Apply $patch_name"
+      else
+          echo "Warning: Failed to apply $patch_file - trying with --reject..."
+          git apply --reject "$patch_file" 2>/dev/null || true
+          # Clean up .rej files
+          find . -name "*.rej" -delete
+          git add .
+          git commit -m "Apply $patch_name (partial)" --allow-empty
+      fi
   done
+
+  # ===== BRANDING VIA SED (more robust than static patches) =====
+  echo "Applying GRID branding via sed replacements..."
+
+  # Replace "VS Code" with APP_NAME in key locations
+  find . -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.json" \) \
+      -not -path "*/node_modules/*" \
+      -not -path "*/.git/*" \
+      -exec sed -i "s/VS Code/${APP_NAME}/g" {} + 2>/dev/null || true
+
+  # Replace "Visual Studio Code" with APP_NAME
+  find . -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.json" \) \
+      -not -path "*/node_modules/*" \
+      -not -path "*/.git/*" \
+      -exec sed -i "s/Visual Studio Code/${APP_NAME}/g" {} + 2>/dev/null || true
+
+  # Commit branding changes
+  git add .
+  git commit -m "Apply GRID branding" --allow-empty
+
+  echo "Branding complete."
 fi
 
 echo "APP_NAME=\"${APP_NAME}\""
